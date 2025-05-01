@@ -65,14 +65,14 @@ const login = async (req, res) => {
             const token = generateToken(user);
             res.cookie("token", token);
             return res.status(200).json({
-                success: true,
-                message: "Login successful",
-                user: user,
-                token: token,
+              success: true,
+              message: "Login successful🥳🎉",
+              user: user,
+              token: token,
             });
         } else {
             return res.status(401).json({
-                error: "Invalid credentials",
+              error: "⚠️Invalid credentials⚠️",
             });
         }
     }
@@ -92,7 +92,7 @@ const logout = async (req, res) => {
         });
     } catch (error) {
         console.error("Error in logout function:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ error: "Internal server error" });
     }
 }
 

@@ -8,6 +8,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 const {requireLogin} = require("./middlewares/auth")
 const userRoute = require("./routes/userRoute");
@@ -21,6 +22,12 @@ connectDB();
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 
 app.use("/api/v1/user", userRoute);

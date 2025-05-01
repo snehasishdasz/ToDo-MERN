@@ -9,8 +9,8 @@ const createTodo = async (req, res) => {
 
         if (!title || !description) {
             return res
-                .status(400)
-                .json({ message: "Please fill all the fields" });
+              .status(400)
+              .json({ error: "⚠️Please fill all the fields⚠️" });
         }
 
         // const user = await User.findById(userId);
@@ -26,15 +26,15 @@ const createTodo = async (req, res) => {
         });
 
         return res.status(201).json({
-            success: true,
-            message: "Todo created successfully!",
-            todo: newTodo,
+          success: true,
+          message: "Todo created successfully!🥳🎉",
+          todo: newTodo,
         });
 
     }
     catch (error) {
         console.error("Error in createTodo function:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ error: "⚠️Internal server error⚠️" });
     }
 }
 
