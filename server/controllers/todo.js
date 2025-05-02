@@ -48,7 +48,7 @@ const getAllTodos = async (req, res) => {
         });
     } catch (error) {
         console.error("Error in getAllTodos function:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ error: "Internal server error" });
     }
 }
 
@@ -75,7 +75,7 @@ const updateTodo = async (req, res) => {
         });
     } catch (error) {
         console.error("Error in updateTodo function:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ error: "Internal server error" });
     }
 };
 
@@ -97,7 +97,7 @@ const deleteTodo = async (req, res) => {
     }
     catch (error) {
         console.error("Error in deleteTodo function:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ error: "Internal server error" });
     }
 }
 

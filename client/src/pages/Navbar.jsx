@@ -10,8 +10,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
+
+  const navigate = useNavigate();
+
   const username = "Snehasish";
   const email = "snehasish@example.com";
 
@@ -25,14 +29,14 @@ export default function Navbar() {
       });
       if (res.data.success) {
         toast.success(res.data.message, {
-          // position: "top-center",
-          duration: 1000, // Keeps toast for 3 seconds
+          duration: 2000,
         });
+        navigate("/login");
       }
     } catch (error) {
       toast.error(error.response.data.error, {
         // position: "top-center",
-        duration: 1000, // 3 seconds
+        duration: 2000, 
       });
     }
   };

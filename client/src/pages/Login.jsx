@@ -5,12 +5,15 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const loginHandler =async () => {
     console.log(user.email, user.password);
@@ -28,15 +31,15 @@ function Login() {
       console.log(res);
       if (res.data.success) {
         toast.success(res.data.message, {
-          position: "top-center",
-          duration: 3000, // Keeps toast for 3 seconds
+          duration: 2000,
         });
+        navigate("/");
       }
     }
     catch (error) {
       toast.error(error.response.data.error, {
-        position: "top-center",
-        duration: 3000, // 3 seconds
+        // position: "top-center",
+        duration: 2000, // 3 seconds
       });
 
       console.log(error);

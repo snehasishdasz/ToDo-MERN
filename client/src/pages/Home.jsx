@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button } from "@/components/ui/button";
-
+import { MdDelete } from "react-icons/md";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { useState } from "react";
@@ -12,7 +12,9 @@ const Home = () => {
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [todos, setTodos] = useState([]);
 
+    // ADD TODO HANDLER
     const addTodoHandler = async () => {
       try {
         const res = await axios.post(
@@ -28,9 +30,12 @@ const Home = () => {
         console.log(res);
         if (res.data.success) {
           toast.success(res.data.message, {
-            // position: "top-center",
+            position: "top-right",
             duration: 3000, // Keeps toast for 3 seconds
           });
+          setTitle("");
+          setDescription("");
+          fetchTodos();
         }
       } catch (error) {
         toast.error(error.response.data.error, {
@@ -41,6 +46,51 @@ const Home = () => {
         console.log(error);
       }
     };
+
+    // FETCHING ALL TODOS
+    const fetchTodos = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/api/v1/todo", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+        console.log(res);
+        if (res.data.success) {
+          setTodos(res.data.todos);
+        }
+      } catch (error) {
+        toast.error(error.response.data.error, {
+          duration: 3000, // 3 seconds
+        });
+      }
+    };
+    // DELETE TODO HANDLER
+    const deleteTodoHandler = async (id) => {
+      try {
+        const res = await axios.delete(
+          `http://localhost:8000/api/v1/todo/${id}`,
+          {
+            withCredentials: true,
+          }
+        );
+        if (res.data.success) {
+          toast.success(res.data.message, { position: "top-right" });
+          fetchTodos(); // Refresh the list
+        }
+      } catch (error) {
+        toast.error(error.response.data.error, { position: "top-right" });
+      }
+    };
+
+
+
+
+    useEffect(() => {
+      fetchTodos();
+    }, [])
+    
 
 
   return (
@@ -79,6 +129,34 @@ const Home = () => {
           >
             Add Todo 🚀
           </Button>
+
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 w-full">
+            {todos.map((todo) => (
+              <div
+                key={todo._id}
+                className="relative bg-gray-800 text-white p-5 rounded-xl shadow-lg border border-gray-700 hover:shadow-xl transition duration-200"
+              >
+                <h3 className="text-xl font-semibold text-blue-400 mb-2">
+                  {todo.title}
+                </h3>
+                <p className="text-gray-300">{todo.description}</p>
+                <button
+                  onClick={() => {
+                    const confirmDelete = window.confirm(
+                      "Are you sure you want to delete this todo?"
+                    );
+                    if (confirmDelete) {
+                      deleteTodoHandler(todo._id);
+                    }
+                  }}
+                  className="absolute top-3 right-3 text-red-400 hover:text-red-600 transition-transform hover:scale-110 text-xl cursor-pointer"
+                  title="Delete"
+                >
+                  <MdDelete />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
