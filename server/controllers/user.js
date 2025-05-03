@@ -96,5 +96,24 @@ const logout = async (req, res) => {
     }
 }
 
+//Function to fetch the loggedin user data
+const getUserData = async (req, res) => {
+    try{
+        const userID = req.user.userId;
+        const user = await User.findById(userID).select("-password -__v");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        return res.status(200).json({
+            success: true,
+            user:user,
+        });
+    }
+    catch (error) {
+        console.error("Error in getUserData function:", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
 
-module.exports = { register, login, logout };
+
+module.exports = { register, login, logout, getUserData };

@@ -10,7 +10,7 @@ const {
 const { requireLogin } = require("../middlewares/auth");
 
 // Get all Todos (Public)
-router.get("/", getAllTodos);
+router.get("/", requireLogin,getAllTodos);
 
 // Create Todo (Protected)
 router.post("/", requireLogin, createTodo);
@@ -20,5 +20,7 @@ router.put("/:todoId", requireLogin, updateTodo);
 
 // Delete Todo (Protected)
 router.delete("/:todoId", requireLogin, deleteTodo);
+
+
 
 module.exports = router;

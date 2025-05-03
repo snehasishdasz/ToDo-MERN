@@ -21,8 +21,9 @@ const createTodo = async (req, res) => {
 
 
         const newTodo = await Todo.create({
-            title,
-            description,
+          title,
+          description,
+          user: req.user.userId,
         });
 
         return res.status(201).json({
@@ -41,7 +42,8 @@ const createTodo = async (req, res) => {
 // Function to get all todo items
 const getAllTodos = async (req, res) => {
     try {
-        const todos = await Todo.find();
+        const userId = req.user.userId;
+        const todos = await Todo.find({ user: userId });
         return res.status(200).json({
             success: true,
             todos,
@@ -101,4 +103,12 @@ const deleteTodo = async (req, res) => {
     }
 }
 
-module.exports = { createTodo, getAllTodos, updateTodo, deleteTodo };
+
+    
+
+module.exports = {
+  createTodo,
+  getAllTodos,
+  updateTodo,
+  deleteTodo,
+};
