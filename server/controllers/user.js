@@ -16,7 +16,7 @@ const register = async (req, res) => {
         // Check if the user already exists
         let user = await User.findOne({ email });
         if (user) {
-            return res.status(500).send("User already registered");
+            return res.status(500).json({error:"User already registered"});
         }
 
         let createdUser = await User.create({
@@ -29,7 +29,7 @@ const register = async (req, res) => {
 
         return res.status(201).json({
             success: true,
-            message: "User registered successfully!",
+            message: "User registered successfully!🥳🎉",
             user: createdUser,
             token: token,
         });
@@ -37,7 +37,7 @@ const register = async (req, res) => {
     }
     catch (error) {
         console.error("Error in register function:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ error: "Internal server error" });
     }
 }
 

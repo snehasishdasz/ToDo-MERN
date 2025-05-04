@@ -5,7 +5,7 @@ const { requireLogin } = require("../middlewares/auth");
 
 // Register route
 // POST /api/v1/user/register
-router.post("/register", register);
+router.post("/signup", register);
 router.post("/login", login);
 
 // Logout route

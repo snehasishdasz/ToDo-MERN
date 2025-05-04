@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import axios from "axios";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
@@ -66,7 +66,9 @@ const [userData, setUserData] = useState(null);
   return (
     <nav className="w-full flex justify-center bg-black border-b border-gray-700 shadow-sm py-3">
       <div className="w-full max-w-3xl px-4 flex items-center justify-between">
+      <Link to="/">
         <h1 className="text-2xl font-bold text-white">TaskFlow</h1>
+      </Link>
 
         {userData ? (
           <DropdownMenu className="bg-gray-600">

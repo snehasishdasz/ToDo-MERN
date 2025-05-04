@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const [user, setUser] = useState({
@@ -16,7 +16,6 @@ function Login() {
   const navigate = useNavigate();
 
   const loginHandler =async () => {
-    console.log(user.email, user.password);
     try{
       const res = await axios.post("http://localhost:8000/api/v1/user/login",{
         email: user.email,
@@ -80,16 +79,19 @@ function Login() {
               className="bg-gray-700 text-white border-gray-600 focus-visible:ring-indigo-400"
             />
           </div>
-          <Button className="w-full bg-indigo-600 hover:bg-indigo-700 transition-all text-white font-semibold"
+          <Button
+            className="w-full bg-indigo-600 hover:bg-indigo-700 transition-all text-white font-semibold"
             onClick={loginHandler}
           >
             Login 🚀
           </Button>
           <p className="text-center text-sm text-gray-400">
             Don't have an account?{" "}
-            <span className="text-indigo-400 cursor-pointer hover:underline">
-              Sign up
-            </span>
+            <Link to={"/signup"}>
+              <span className="text-indigo-400 cursor-pointer hover:underline">
+                Sign up
+              </span>
+            </Link>
           </p>
         </CardContent>
       </Card>
