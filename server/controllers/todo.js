@@ -103,6 +103,26 @@ const deleteTodo = async (req, res) => {
     }
 }
 
+//Function to get todo by its ID
+const getTodoById = async (req, res) => {
+    try {
+        const { todoId } = req.params;
+        const todo = await Todo.findById(todoId);
+
+        if (!todo) {
+            return res.status(404).json({ error: "Todo not found" });
+        }
+
+        return res.status(200).json({
+            success: true,
+            todo,
+        });
+    } catch (error) {
+        console.error("Error in getTodoById function:", error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+
 
     
 
@@ -111,4 +131,5 @@ module.exports = {
   getAllTodos,
   updateTodo,
   deleteTodo,
+  getTodoById,
 };

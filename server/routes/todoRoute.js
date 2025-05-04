@@ -5,6 +5,7 @@ const {
   getAllTodos,
   updateTodo,
   deleteTodo,
+  getTodoById,
 } = require("../controllers/todo");
 
 const { requireLogin } = require("../middlewares/auth");
@@ -16,10 +17,13 @@ router.get("/", requireLogin,getAllTodos);
 router.post("/", requireLogin, createTodo);
 
 // Update Todo (Protected)
-router.put("/:todoId", requireLogin, updateTodo);
+router.put("/edit/:todoId", requireLogin, updateTodo);
 
 // Delete Todo (Protected)
 router.delete("/:todoId", requireLogin, deleteTodo);
+
+// Get Todo by ID (Protected)
+router.get("/:todoId", requireLogin, getTodoById);
 
 
 

@@ -8,7 +8,6 @@ import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import Navbar from './Navbar';
 import Cookies from "js-cookie";
 
 const Home = () => {
@@ -109,9 +108,6 @@ const Home = () => {
     return (
       <>
         <div className="bg-gray-900 text-white min-h-screen flex flex-col">
-          {/* Navbar */}
-          <Navbar />
-
           {/* Main Content */}
           <div className="flex flex-col items-center mt-12 space-y-8">
             {/* Input Title */}

@@ -81,7 +81,7 @@ const [userData, setUserData] = useState(null);
                 <span className="text-sm font-medium text-yellow-500">
                   {userData.fullName}
                 </span>
-                <span className="text-xs text-white-500">{userData.email}</span>
+                <span className="text-xs text-white">{userData.email}</span>
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-52">
