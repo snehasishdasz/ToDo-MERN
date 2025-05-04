@@ -5,14 +5,20 @@ import Login from "./pages/Login";
 import EditTodo from "./pages/EditTodo";
 import Layout from "./pages/Layout";
 import SignUp from "./pages/SignUp";
+import FrontPage from "./pages/FrontPage";
+import NotFound from "./pages/NotFound";
 
 const appRouter = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />, // Navbar is here
+    element: <FrontPage />, // ⬅️ Default root shows FrontPage
+  },
+  {
+    path: "/home",
+    element: <Layout />, // ⬅️ Protected layout starts here
     children: [
-      { path: "/", element: <Home /> },
-      { path: "/todo/edit/:id", element: <EditTodo /> },
+      { path: "", element: <Home /> }, // ➜ /app
+      { path: "todo/edit/:id", element: <EditTodo /> }, // ➜ /app/todo/edit/:id
     ],
   },
   {
@@ -27,6 +33,10 @@ const appRouter = createBrowserRouter([
     path: "/todo/edit/:id",
     element: <EditTodo />,
   },
+  {
+    path: "*",
+    element:<NotFound/>
+  }
 ]);
 
 

@@ -1,55 +1,43 @@
-import React, { useEffect } from 'react'
-import { Button } from "@/components/ui/button";
-import { MdDelete } from "react-icons/md";
+import React, { useEffect, useState } from "react";
+import { motion } from "motion/react";
+import { MdDelete, MdAdd, MdLogout } from "react-icons/md";
 import { BiSolidMessageSquareEdit } from "react-icons/bi";
-import { Input } from "../components/ui/input";
-import { Textarea } from "../components/ui/textarea";
-import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 
 const Home = () => {
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [todos, setTodos] = useState([]);
-
   const navigate = useNavigate();
 
   // ADD TODO HANDLER
   const addTodoHandler = async () => {
+    if (!title.trim()) {
+      toast.error("Title cannot be empty");
+      return;
+    }
+
     try {
       const res = await axios.post(
         "http://localhost:8000/api/v1/todo",
         { title, description },
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
-      console.log(res);
       if (res.data.success) {
-        toast.success(res.data.message, {
-          position: "top-right",
-          duration: 3000, // Keeps toast for 3 seconds
-        });
+        toast.success(res.data.message);
         setTitle("");
         setDescription("");
         fetchTodos();
       }
     } catch (error) {
-      toast.error(error.response.data.error, {
-        // position: "top-center",
-        duration: 3000, // 3 seconds
-      });
-      // Redirect to login if unauthorized
+      toast.error(error.response.data.error);
       navigate("/login");
-
-      console.log(error);
     }
   };
 
@@ -57,128 +45,140 @@ const Home = () => {
   const fetchTodos = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/v1/todo", {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-      console.log(res);
-      if (res.data.success) {
-        setTodos(res.data.todos);
-      }
+      if (res.data.success) setTodos(res.data.todos);
     } catch (error) {
-      toast.error(error.response.data.error, {
-        duration: 3000, // 3 seconds
-      });
+      toast.error(error.response.data.error);
     }
   };
+
   // DELETE TODO HANDLER
   const deleteTodoHandler = async (id) => {
     try {
       const res = await axios.delete(
         `http://localhost:8000/api/v1/todo/${id}`,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
       if (res.data.success) {
-        toast.success(res.data.message, { position: "top-right" });
-        fetchTodos(); // Refresh the list
+        toast.success(res.data.message);
+        fetchTodos();
       }
     } catch (error) {
-      toast.error(error.response.data.error, { position: "top-right" });
+      toast.error(error.response.data.error);
     }
   };
 
-
   useEffect(() => {
-    const token = Cookies.get("token"); // 'token' is the cookie name
-
-    if (!token) {
-      navigate("/login");
-    }
-  }, []);
-
-    useEffect(() => {
-      fetchTodos();
-    }, [])
+    const token = Cookies.get("token");
+    if (!token) navigate("/login");
+    else fetchTodos();
+  }, [navigate]);
 
 
+  return (
+    <div className="min-h-screen bg-[#0F0C29] text-white">
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-[30%] -left-[10%] w-[70%] h-[70%] rounded-full bg-[#6A5ACD]/10 blur-[100px]"></div>
+        <div className="absolute -bottom-[30%] -right-[10%] w-[70%] h-[70%] rounded-full bg-[#8A2BE2]/10 blur-[100px]"></div>
+      </div>
 
-    return (
-      <>
-        <div className="bg-gray-900 text-white min-h-screen flex flex-col">
-          {/* Main Content */}
-          <div className="flex flex-col items-center mt-12 space-y-8">
-            {/* Input Title */}
-            <Input
-              type="text"
-              placeholder="Add a Title"
-              className="w-full max-w-xl p-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all"
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-              }}
-            />
+      
 
-            {/* Textarea Description */}
-            <Textarea
-              placeholder="Write a description"
-              className="w-full max-w-xl p-4 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all resize-none"
-              value={description}
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
-            />
-
-            {/* Add Todo Button */}
-            <Button
-              className="w-full max-w-xl py-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-              onClick={addTodoHandler}
-            >
-              Add Todo 🚀
-            </Button>
-
-            <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 w-full">
-              {todos.map((todo) => (
-                <div
-                  key={todo._id}
-                  className="relative bg-gray-800 text-white p-5 rounded-xl shadow-lg border border-gray-700 hover:shadow-xl transition duration-200"
-                >
-                  <h3 className="text-xl font-semibold text-blue-400 mb-2">
-                    {todo.title}
-                  </h3>
-                  <p className="text-gray-300">{todo.description}</p>
-                  <button
-                    onClick={() => {
-                      const confirmDelete = window.confirm(
-                        "Are you sure you want to delete this todo?"
-                      );
-                      if (confirmDelete) {
-                        deleteTodoHandler(todo._id);
-                      }
-                    }}
-                    className="absolute top-3 right-3 text-red-400 hover:text-red-600 transition-transform hover:scale-110 text-xl cursor-pointer"
-                    title="Delete"
-                  >
-                    <MdDelete />
-                  </button>
-
-                  {/* Edit Todo Button */}
-                  <Link
-                    to={`/todo/edit/${todo._id}`}
-                    className="absolute bottom-3 right-3 text-yellow-400 hover:text-yellow-500 transition cursor-pointer"
-                    title="Edit"
-                  >
-                    <BiSolidMessageSquareEdit />
-                  </Link>
-                </div>
-              ))}
+      <main className="relative max-w-7xl mx-auto px-4 py-8 flex flex-col gap-12">
+        {/* Input Section */}
+        <section className="w-full max-w-2xl mx-auto">
+          <div className="backdrop-blur-md bg-black/20 rounded-2xl p-6 border border-purple-900/30 shadow-xl">
+            <h2 className="text-xl font-bold mb-6">Create New Todo</h2>
+            <div className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Task title"
+                  className="w-full bg-black/30 border border-purple-900/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </div>
+              <div>
+                <textarea
+                  placeholder="Task description"
+                  className="w-full bg-black/30 border border-purple-900/30 rounded-xl px-4 py-3 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none h-24"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                ></textarea>
+              </div>
+              <button
+                onClick={addTodoHandler}
+                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg"
+              >
+                <MdAdd size={20} /> Add Task
+              </button>
             </div>
           </div>
-        </div>
-      </>
-    );
-  }
+        </section>
+
+        {/* Tasks Section */}
+        <section className="w-full">
+          <h2 className="text-2xl font-bold mb-6 flex items-center">
+            Your Tasks{" "}
+            <span className="ml-2 text-sm font-normal bg-black/30 px-2 py-1 rounded-full">
+              {todos.length}
+            </span>
+          </h2>
+
+          {todos.length === 0 ? (
+            <div className="text-center py-12 backdrop-blur-md bg-black/20 rounded-2xl border border-purple-900/30">
+              <p className="text-gray-400">
+                No tasks yet. Create one to get started!
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {todos.map((todo) => (
+                <motion.div
+                  key={todo._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="backdrop-blur-md bg-black/20 rounded-2xl p-6 border border-purple-900/30 shadow-xl h-full flex flex-col hover:shadow-purple-900/10 hover:scale-[1.02] transition-all"
+                >
+                  <h3 className="text-xl font-semibold text-purple-400 mb-3 pr-10">
+                    {todo.title}
+                  </h3>
+                  <p className="text-gray-300 mb-6 flex-grow">
+                    {todo.description}
+                  </p>
+                  <div className="flex justify-end gap-2 mt-auto">
+                    <Link
+                      to={`/todo/edit/${todo._id}`}
+                      className="p-2 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/20 transition-all"
+                      title="Edit"
+                    >
+                      <BiSolidMessageSquareEdit size={20} />
+                    </Link>
+                    <button
+                      onClick={() => {
+                        if (window.confirm("Delete this task?")) {
+                          deleteTodoHandler(todo._id);
+                        }
+                      }}
+                      className="p-2 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 transition-all"
+                      title="Delete"
+                    >
+                      <MdDelete size={20} />
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
+    </div>
+  );
+};
 
 export default Home;
