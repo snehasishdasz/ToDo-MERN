@@ -85,9 +85,7 @@ const Home = () => {
         <div className="absolute -bottom-[30%] -right-[10%] w-[70%] h-[70%] rounded-full bg-[#8A2BE2]/10 blur-[100px]"></div>
       </div>
 
-      
-
-      <main className="relative max-w-7xl mx-auto px-4 py-8 flex flex-col gap-12">
+      <main className="relative max-w-7xl mx-auto px-4 pt-20 pb-8 flex flex-col gap-12">
         {/* Input Section */}
         <section className="w-full max-w-2xl mx-auto">
           <div className="backdrop-blur-md bg-black/20 rounded-2xl p-6 border border-purple-900/30 shadow-xl">
