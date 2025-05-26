@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://todo-mern-clientt.onrender.com",
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
