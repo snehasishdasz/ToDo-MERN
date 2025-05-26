@@ -19,7 +19,7 @@ const EditTodo = () => {
   const fetchTodo = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:8000/api/v1/todo/${id}`, {
+      const res = await axios.get(`https://todo-mern-server-ust8.onrender.com/api/v1/todo/${id}`, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
@@ -47,7 +47,7 @@ const EditTodo = () => {
 
     try {
       const res = await axios.put(
-        `http://localhost:8000/api/v1/todo/edit/${id}`,
+        `https://todo-mern-server-ust8.onrender.com/api/v1/todo/edit/${id}`,
         { title, description },
         { withCredentials: true }
       );
